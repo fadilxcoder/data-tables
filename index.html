@@ -1,38 +1,3 @@
-<?php
-	$servername = '';
-	$username   = '';
-	$password   = '';
-	$dbname     = '';
-	
-	$connection = new mysqli($servername, $username, $password, $dbname);
-	global $connection;
-	
-    $connection->set_charset("utf8");
-
-    # Errors
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-    # Database Manipulation
-    function converter($query)
-    {
-        $arr = array();
-        while( $data = $query->fetch_assoc()):
-            $arr[] = $data;
-        endwhile;
-        return $arr;
-    }
-
-    function selectAll()
-    {
-        global $connection;
-        $sql    = "SELECT * FROM vip_list ORDER BY id ASC";
-        $query  = $connection->query($sql);
-        $result = converter($query);
-        return $result;
-    }
-?>
 <html>
     <head>
         <title>DATA TABLES</title>
@@ -45,10 +10,11 @@
                     // "searching": false,
                     // "ordering": false
                     // "order": [[ 3, "asc" ]], // ORDER by column
-                    "pageLength": 5,
+                    "pageLength": 15,
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
-                    }
+                    },
+                    "ajax": 'query.php',
                 });
             });
         </script>
@@ -68,16 +34,14 @@
                     <th>email</th>
                 </tr>
             </thead>
-            <tbody>
-                <?php foreach(selectAll() as $data) : ?>
+            <tfoot>
                 <tr>
-                    <td><?php echo $data['id'] ?></td>
-                    <td><?php echo $data['name'] ?></td>
-                    <td><?php echo $data['surname'] ?></td>
-                    <td><?php echo $data['email'] ?></td>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>SURNAME</th>
+                    <th>email</th>
                 </tr>
-                <?php endforeach; ?>
-            </tbody>
+            </tfoot>
         </table>
     </body>
 </html>
